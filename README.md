@@ -1,52 +1,34 @@
-# 🌐 Router & Switch Management with TFTP Backup & IOS Upgrade
+# Router & Switch Management with TFTP Backup & IOS Upgrade
 
-<div align="center">
+## Overview
 
-![Cisco](https://img.shields.io/badge/Cisco-Packet%20Tracer%209.0-1BA0D7?style=for-the-badge&logo=cisco&logoColor=white)
-![OSPF](https://img.shields.io/badge/Routing-OSPF-orange?style=for-the-badge)
-![TFTP](https://img.shields.io/badge/Backup-TFTP-blue?style=for-the-badge)
-![SSH](https://img.shields.io/badge/Security-SSH%20v2-green?style=for-the-badge)
-
-**NND Project | Course ID: INITC602 | NSUT Delhi**
-
-| Team Member | Enrollment No. |
-|---|---|
-| Vansh Bhardwaj | 2023UIN3324 |
-| Khushi Kumari | 2023UIN3334 |
-| Ishita Soni | 2023UIN3343 |
-
-*Submitted to: Ms. Pooja Yadav*
-
-</div>
+This project simulates an enterprise university campus network in Cisco Packet Tracer 9.0. It features a 3-tier hierarchical topology with centralized TFTP-based configuration backup, IOS image management, OSPF dynamic routing, inter-VLAN routing, and network security.
 
 ---
 
-## 📌 Overview
-
-This project simulates an **enterprise university campus network** in Cisco Packet Tracer 9.0. It features a **3-tier hierarchical topology** with centralized TFTP-based configuration backup, IOS image management, OSPF dynamic routing, inter-VLAN routing, and network security.
-
-## 🖼️ Network Topology
+## Network Topology
 
 ![Network Topology](Images/project.png)
 
 ---
 
-## 📋 Table of Contents
-- [Network Design](#-network-design)
-- [VLAN & IP Scheme](#-vlan--ip-scheme)
-- [Key Features](#-key-features)
-- [TFTP Backup & IOS Upgrade](#-tftp-backup--ios-upgrade)
-- [Security](#-security)
-- [Verification](#-verification)
-- [Files in this Repo](#-files-in-this-repo)
+## Table of Contents
+
+- Network Design
+- VLAN & IP Scheme
+- Key Features
+- TFTP Backup & IOS Upgrade
+- Security
+- Verification
+- Files in this Repository
 
 ---
 
-## 🗺️ Network Design
+## Network Design
 
-The topology follows a **3-tier hierarchical model**:
+The topology follows a 3-tier hierarchical model:
 
-```
+```text
              [ Edge Router ER-1 ] ← Internet/ISP
                       |
              [ Core Router CR-1 ]
@@ -69,7 +51,7 @@ The topology follows a **3-tier hierarchical model**:
 
 ---
 
-## 🏷️ VLAN & IP Scheme
+## VLAN & IP Scheme
 
 | VLAN | Name | Subnet | Gateway |
 |---|---|---|---|
@@ -80,112 +62,122 @@ The topology follows a **3-tier hierarchical model**:
 | 50 | Management | 192.168.50.0/24 | 192.168.50.1 |
 | 100 | Servers | 192.168.100.0/24 | 192.168.100.1 |
 
-**Key IPs:** TFTP Server `192.168.100.10` · DNS/Web Server `192.168.100.20` · Management PC `192.168.50.10`
+Key IPs:
+- TFTP Server → `192.168.100.10`
+- DNS/Web Server → `192.168.100.20`
+- Management PC → `192.168.50.10`
 
 ---
 
-## ⚡ Key Features
+## Key Features
 
-- **Multi-Area OSPF** — Area 0 (backbone), Area 1 (Admin/IT), Area 2 (Labs/Library)
-- **Inter-VLAN Routing** via SVIs on L3 distribution switches
-- **802.1Q Trunking** between distribution and access switches
-- **NAT/PAT** on ER-1 for internet access
-- **DHCP** pools configured per VLAN on Dist-SW-1
-- **STP PVST+** with optimized root bridge placement per VLAN
+- Multi-Area OSPF
+- Inter-VLAN Routing
+- 802.1Q Trunking
+- NAT/PAT Configuration
+- DHCP Configuration
+- STP PVST+ Implementation
+- TFTP Backup & Restore
+- IOS Upgrade Simulation
+- SSH Remote Access
+- ACL & Port Security
 
 ---
 
-## 💾 TFTP Backup & IOS Upgrade
+## TFTP Backup & IOS Upgrade
 
-### Configuration Backup (all devices)
+### Configuration Backup
+
 ```bash
-# Backup to TFTP
 Router# copy running-config tftp
 Address or name of remote host? 192.168.100.10
 Destination filename? CR-1-running-backup
+```
 
-# Restore from TFTP
+### Configuration Restore
+
+```bash
 Router# copy tftp running-config
 Address or name of remote host? 192.168.100.10
 Source filename? CR-1-running-backup
 ```
 
 ### IOS Upgrade Process
+
 ```bash
-# 1. Backup current IOS first
 CR-1# copy flash: tftp:
-Source filename? c2900-universalk9-mz.SPA.151-4.M4.bin
-Destination filename? CR-1-IOS-backup.bin
-
-# 2. Copy new IOS from TFTP
 CR-1# copy tftp flash:
-Source filename? c2900-universalk9-mz.SPA.155-3.M4a.bin
-
-# 3. Set boot order with fallback
-CR-1(config)# boot system flash:c2900-universalk9-mz.SPA.155-3.M4a.bin
-CR-1(config)# boot system flash:c2900-universalk9-mz.SPA.151-4.M4.bin
+CR-1(config)# boot system flash:new-ios.bin
 CR-1# reload
 ```
 
 ---
 
-## 🔒 Security
+## Security
 
 | Feature | Implementation |
 |---|---|
-| **SSH v2** | All devices — replaces Telnet for remote management |
-| **ACL (TFTP-ACCESS)** | Restricts TFTP access to authorized subnets only |
-| **Port Security** | Sticky MAC, max 1 address, restrict violation on access ports |
-| **STP BPDU Guard** | Enabled globally on all access ports |
-| **Password Encryption** | `service password-encryption` + `enable secret` on all devices |
+| SSH v2 | Secure remote device management |
+| ACLs | Restrict TFTP access |
+| Port Security | Sticky MAC & violation protection |
+| STP BPDU Guard | Enabled on access ports |
+| Password Encryption | Service password-encryption |
 
 ---
 
-## ✅ Verification
+## Verification
 
 ```bash
-# OSPF
-show ip ospf neighbor          # Should show FULL state neighbors
-show ip route ospf             # Should show all 192.168.x.0 subnets
-
-# VLANs & Trunks
+show ip ospf neighbor
+show ip route ospf
 show vlan brief
 show interfaces trunk
-
-# TFTP & Flash
 show flash:
 show startup-config
-
-# Security
-show port-security interface Fa0/2
 show access-lists
 show ip ssh
 ```
 
-**Ping Test Results (from Admin-PC1):**
-- ✅ Default gateway `192.168.10.1` — 0% loss
-- ✅ IT VLAN `192.168.20.10` — reachable
-- ✅ TFTP Server `192.168.100.10` — reachable
-- ✅ WAN link `10.0.0.2` — 0% loss
+Ping tests successfully verified:
+- Inter-VLAN connectivity
+- TFTP server reachability
+- WAN connectivity
+- OSPF routing functionality
 
 ---
 
-## 📁 Files in this Repo
+## Files in this Repository
 
+```text
+Router-Switch-Management-with-TFTP/
+│
+├── README.md
+├── Final NND Project.pkt
+├── NND Project Report.pdf
+├── LICENSE
+│
+└── Images/
+    └── project.png
 ```
-📦 Router-Switch-Management-with-TFTP/
-├── 📄 README.md
-├── 📦 Final NND Project.pkt        ← Open in Cisco Packet Tracer 9.0+
-├── 📄 NND Project Report (final).pdf
-├── 🔑 LICENSE
-└── 📁 Images/
-    └── project.png                 ← Network topology screenshot
-```
-
-> **Requirements:** Cisco Packet Tracer 9.0+, free via [Cisco NetAcad](https://www.netacad.com)
 
 ---
 
-<div align="center">
-Made with ❤️ by Vansh Bhardwaj, Khushi Kumari & Ishita Soni · NSUT Delhi · B.Tech IT 2023
-</div>
+## Requirements
+
+- Cisco Packet Tracer 9.0 or higher
+- Basic networking knowledge
+- Routing & Switching concepts
+
+---
+
+## Contributors
+
+- Khushi Kumari
+- Vansh Bhardwaj
+- Ishita Soni
+
+---
+
+## License
+
+This project is licensed under the MIT License.
