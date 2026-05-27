@@ -14,13 +14,15 @@ This project simulates an enterprise university campus network in Cisco Packet T
 
 ## Table of Contents
 
-- Network Design
-- VLAN & IP Scheme
-- Key Features
-- TFTP Backup & IOS Upgrade
-- Security
-- Verification
-- Files in this Repository
+- [Network Design](#network-design)
+- [VLAN & IP Scheme](#vlan--ip-scheme)
+- [Key Features](#key-features)
+- [TFTP Backup & IOS Upgrade](#tftp-backup--ios-upgrade)
+- [Security](#security)
+- [Verification](#verification)
+- [Files in this Repository](#files-in-this-repository)
+- [Requirements](#requirements)
+- [License](#license)
 
 ---
 
@@ -43,10 +45,10 @@ The topology follows a 3-tier hierarchical model:
 | Device | Model | Role |
 |---|---|---|
 | CR-1 | Cisco 2911 | Core router, OSPF backbone |
-| ER-1 | Cisco 2911 | WAN edge, NAT, DHCP |
-| Dist-SW-1/2 | Cisco 3560-24PS | L3 switches, inter-VLAN routing |
-| Access-SW-1 to 4 | Cisco 2960-24TT | End-user access switches |
-| TFTP Server | Server-PT | Config & IOS backup |
+| ER-1 | Cisco 2911 | WAN edge router |
+| Dist-SW-1/2 | Cisco 3560-24PS | Layer 3 distribution switches |
+| Access-SW-1 to 4 | Cisco 2960-24TT | Access layer switches |
+| TFTP Server | Server-PT | Backup & IOS storage |
 | DNS/Web Server | Server-PT | Internal services |
 
 ---
@@ -62,7 +64,8 @@ The topology follows a 3-tier hierarchical model:
 | 50 | Management | 192.168.50.0/24 | 192.168.50.1 |
 | 100 | Servers | 192.168.100.0/24 | 192.168.100.1 |
 
-Key IPs:
+### Key IP Addresses
+
 - TFTP Server → `192.168.100.10`
 - DNS/Web Server → `192.168.100.20`
 - Management PC → `192.168.50.10`
@@ -71,8 +74,9 @@ Key IPs:
 
 ## Key Features
 
-- Multi-Area OSPF
+- Multi-Area OSPF Routing
 - Inter-VLAN Routing
+- VLAN Segmentation
 - 802.1Q Trunking
 - NAT/PAT Configuration
 - DHCP Configuration
@@ -117,7 +121,7 @@ CR-1# reload
 
 | Feature | Implementation |
 |---|---|
-| SSH v2 | Secure remote device management |
+| SSH v2 | Secure remote management |
 | ACLs | Restrict TFTP access |
 | Port Security | Sticky MAC & violation protection |
 | STP BPDU Guard | Enabled on access ports |
@@ -138,11 +142,13 @@ show access-lists
 show ip ssh
 ```
 
-Ping tests successfully verified:
-- Inter-VLAN connectivity
-- TFTP server reachability
-- WAN connectivity
-- OSPF routing functionality
+### Connectivity Verification
+
+- Inter-VLAN communication verified
+- OSPF neighbor adjacency verified
+- TFTP server reachability verified
+- WAN connectivity verified
+- SSH remote access verified
 
 ---
 
@@ -152,12 +158,12 @@ Ping tests successfully verified:
 Router-Switch-Management-with-TFTP/
 │
 ├── README.md
+├── LICENSE
 ├── Final NND Project.pkt
 ├── NND Project Report.pdf
-├── LICENSE
 │
 └── Images/
-    └── project.png
+    └── Project.jpeg
 ```
 
 ---
@@ -170,14 +176,6 @@ Router-Switch-Management-with-TFTP/
 
 ---
 
-## Contributors
-
-- Khushi Kumari
-- Vansh Bhardwaj
-- Ishita Soni
-
----
-
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See `LICENSE` for details.
