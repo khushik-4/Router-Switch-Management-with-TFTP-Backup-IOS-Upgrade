@@ -8,7 +8,7 @@ This project simulates an enterprise university campus network in Cisco Packet T
 
 ## Network Topology
 
-![Network Topology](Images/project.png)
+![Network Topology](Images/Project.jpeg)
 
 ---
 
